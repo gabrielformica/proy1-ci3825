@@ -1,0 +1,32 @@
+#!/bin/bash
+#Gabriel Formica
+
+SCRIPT=$1
+DEFAULT='ordenArchivo-p'
+echo "Este script genera casos y los prueba ${SCRIPT:=$DEFAULT}"
+echo "Escriba la cantidad de numeros aleatorios que desea crear: "
+read NUMBERS
+echo "Escriba el valor maximo que desea que tenga cada valor aleatorio: "
+read MAX
+
+
+./genbin $NUMBERS $MAX | sort -n | cat > ord1 
+i=1
+x=1
+
+while [ 0 ]; do
+	if [ $x -gt $NUMBERS ]; then
+		break
+	fi
+	#Se ejecuta el script	
+	./${SCRIPT:=$DEFAULT} $NUMBERS $i tempbin ord2 >> /dev/null
+	if diff -s ord1 ord2 >> /dev/null ; then
+		echo "Con $i niveles la salida es correcta"
+	else
+		echo "Con $i niveles la salida da un fallo"
+	fi
+	rm ord2
+	x=$(( $x * 2 ));
+	i=$(( $i + 1 ));
+done
+rm ord1 
